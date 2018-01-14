@@ -2,7 +2,7 @@ from passenger import Passenger
 
 class Elevator(object):
 
-    def __init__(self, n_floors):
+    def __init__(self, n_floors, max_people = 10):
         # initiating Elevator object with number of maximum floors in the building
         # starting at floor 0
         self.calls = []
@@ -10,24 +10,56 @@ class Elevator(object):
         self.n_floors = n_floors
         self.direction = None
         self.destinations = set([])
+        self.max_people = max_people
+
+    def move_FIFO(self, dest):
+        self.floor = dest
+
+    def move_one(self, dest):
+        self.floor += self.direction
+
+        # check for pickups on this floor
+        for i in range(len(self.calls)):
+            call = self.calls[i]
+            passenger = call[3]
+            if call[0] == self.floor and call[2] == direction:
+                self.add_destination(call[1], passenger) # adding dest and passenger
+                del self.calls[i]
+            passenger.time_cost += 1
+
+        # Check for dropoffs (destination) on this floor
+        for i in range(len(self.destinations)):
+            dest = self.destinations[i]
+            if dest[0] == self.floor:
+                del self.destinations[i]
+                stopped = 1
+
+        cost = 1 + stopped
 
     def move_one(self, dest):
         # move to the next destination if it's on the same direction
         movement = direction(self.floor, dest)
+        initial_floor = self.floor
         self.floor = self.floor + movement
-
+        distance = self.floor - initial_floor
+        stopped = 0
         # check if there is a call in this floor
         for call in self.calls:
             if call[0] == self.floor:
                 self.pickup(self.calls[2]) """ which is the person. need to program picking up people and weight"""
+                stopped = 1
 
         # Check for dropoffs (destination) on this floor
         for dest in self.destinations:
             if dest[0] == self.floor:
                 self.dropoff(dest[1]) #dest[1] is the Passenger
+                stopped = 1
 
-        for passenger in self.calls:
-            p = passenger[2]
+        #for call in self.calls:
+        #    passenger = call[2]
+        #    cost = distance + stopped ## cost is the distance plus 1 if the elevator stopped at the destination
+        #    passenger.time_cost += cost
+
 
         #if direction(self.floor, dest) == self.direction:
         #self.floor += dest - self.curr_floor
@@ -37,12 +69,12 @@ class Elevator(object):
         while len(self.calls) > 0:
             call_floor = self.calls[0][0]
             call_dest = self.calls[0][1]
-            passenger = self.
             move_one(self, call_dest)
 
     def call(self, call_floor, dest, Passenger):
         # append to calls log
-        self.calls.append([call_floor, dest, Passenger])
+        direction = calc_direction(call_floor, dest)
+        self.calls.append([call_floor, dest, direction, Passenger])
 
     def add_destination(self, Passenger):
         """ need to implement destination as part of the Passenger class"""
