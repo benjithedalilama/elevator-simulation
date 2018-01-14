@@ -1,4 +1,5 @@
 from passenger import Passenger
+from utilities import calc_direction
 
 class Elevator(object):
 
@@ -12,10 +13,10 @@ class Elevator(object):
         self.destinations = set([])
         self.max_people = max_people
 
-    def move_FIFO(self, dest):
-        self.floor = dest
+    def move_FIFO(self, target):
+        self.floor = target
 
-    def move_one(self, dest):
+    def move_one(self):
         self.floor += self.direction
 
         # check for pickups on this floor
@@ -30,46 +31,42 @@ class Elevator(object):
         # Check for dropoffs (destination) on this floor
         for i in range(len(self.destinations)):
             dest = self.destinations[i]
+            passenger = dest[1]
             if dest[0] == self.floor:
                 del self.destinations[i]
-                stopped = 1
+            passenger.time_cost += 1
 
-        cost = 1 + stopped
-
-    def move_one(self, dest):
-        # move to the next destination if it's on the same direction
-        movement = direction(self.floor, dest)
-        initial_floor = self.floor
-        self.floor = self.floor + movement
-        distance = self.floor - initial_floor
-        stopped = 0
-        # check if there is a call in this floor
+    def FIFO(self):
+        """ Naive strategy: FIFO """
+        first_call = self.calls[0]
+        passenger = first_call[3]
+        #move the Elevator twards next passenger in queue
+        empty_elevator_dist = abs(self.floor - passenger.start_floor)
+        self.move_FIFO(passenger.destination) #take the passenger to its destinations
+        distance = abs(passenger.start_floor - passenger.destination) #sitance passenger traveled
+        #update everyone's wait time_cost
         for call in self.calls:
-            if call[0] == self.floor:
-                self.pickup(self.calls[2]) """ which is the person. need to program picking up people and weight"""
-                stopped = 1
+            passenger.time_cost += distance + empty_elevator_dist
 
-        # Check for dropoffs (destination) on this floor
-        for dest in self.destinations:
-            if dest[0] == self.floor:
-                self.dropoff(dest[1]) #dest[1] is the Passenger
-                stopped = 1
+    def move_to_max_min(self):
+        if self.direction == 1:
+            up_floors = [i[1] for i in self.calls if i[2] == 1]
+            dests = [i[0] for i in self.destinations]
+            up_dest = max(max(up_floors), max(dests))
+            while self.floor < up_dest:
+                self.move_one()
+        elif self.direction == -1:
+            down_floors = [i[1] for i in self.calls if i[2] == -1]
+            dests = [i[0] for i in self.destinations]
+            down_dest = min(min(down_floors), min(dests))
+            while self.floor < down_dest:
+                self.move_one()
+        #self.direction = -1*self.direction
 
-        #for call in self.calls:
-        #    passenger = call[2]
-        #    cost = distance + stopped ## cost is the distance plus 1 if the elevator stopped at the destination
-        #    passenger.time_cost += cost
-
-
-        #if direction(self.floor, dest) == self.direction:
-        #self.floor += dest - self.curr_floor
-
-    def naive_strat(self):
-        # while there are calls, pickup fi
-        while len(self.calls) > 0:
-            call_floor = self.calls[0][0]
-            call_dest = self.calls[0][1]
-            move_one(self, call_dest)
+    def max_floor_strategy(self):
+        while self.calls or self.destinations:
+            self.move_to_max_min()
+            self.direction = -1*self.direction #change direction
 
     def call(self, call_floor, dest, Passenger):
         # append to calls log
@@ -81,17 +78,3 @@ class Elevator(object):
         # for test: geenrating random destination:
         # uniformly_random_destination =  randint(self.floors_min, self.floors_max)
         self.destinations.add(Passenger.destination, Passenger)
-
-def direction(current_floor, destination):
-    # calculate the direction of movement based on start and end floors
-    direction = None
-    movement = destination - current_floor
-    # calculate floors difference to determine direction:
-    if movement > 0:
-        direction = +1
-    elif movement < 0:
-        direction = -1
-    else:
-        # if destination is same as current floor, stay
-        direction = 0
-    return direction
