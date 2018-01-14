@@ -17,19 +17,20 @@ class Elevator(object):
 
     def move_one(self, dest):
         self.floor += self.direction
-        stopped = 0
 
         # check for pickups on this floor
         for i in range(len(self.calls)):
             call = self.calls[i]
+            passenger = call[3]
             if call[0] == self.floor and call[2] == direction:
+                self.add_destination(call[1], passenger) # adding dest and passenger
                 del self.calls[i]
-                stopped = 1
+            passenger.time_cost += 1
 
         # Check for dropoffs (destination) on this floor
         for i in range(len(self.destinations)):
             dest = self.destinations[i]
-            if dest[0] == self.floor and dest[2] == direction:
+            if dest[0] == self.floor:
                 del self.destinations[i]
                 stopped = 1
 
