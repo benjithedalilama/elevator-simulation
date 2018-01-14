@@ -13,22 +13,16 @@ class Elevator(object):
 
     def move_one(self, dest):
         # move to the next destination if it's on the same direction
-        # move 1 floor in direction (direction is +1 or -1 floors)
         movement = direction(self.floor, dest)
         self.floor = self.floor + movement
 
         # check if there is a call in this floor
-        # ** this checks the last element in the calls list, assuming we append to it!
         for call in self.calls:
-            # Check for pickups on that floor
             if call[0] == self.floor:
-                # if the last call is from this floor pickup person
                 self.pickup(self.calls[2]) """ which is the person. need to program picking up people and weight"""
-                #self.add_rand_destination()
 
         # Check for dropoffs (destination) on this floor
         for dest in self.destinations:
-            # check for destinations and dropoff
             if dest[0] == self.floor:
                 self.dropoff(dest[1]) #dest[1] is the Passenger
 
@@ -44,17 +38,6 @@ class Elevator(object):
         # for test: geenrating random destination:
         # uniformly_random_destination =  randint(self.floors_min, self.floors_max)
         self.destinations.add(Passenger.destination, Passenger)
-
-    # def pickup(self,Passenger):
-    #     self.add_rand_destination(self)
-    #     # add random weight
-    #     """ change this to person's weight when we have that class and simulaiton"""
-    #     self.weight += Passenger.weight # change to self.weight += Passenger.weight
-    #     return "I don't know yet what does picking up passengers really mean."
-    #
-	# def dropoff(self,Passenger):
-    # 	self.weight -= Passenger.weight
-    # 	return "I don't know yet what does picking up passengers really mean."
 
 def direction(current_floor, destination):
     # calculate the direction of movement based on start and end floors
