@@ -37,13 +37,20 @@ class Elevator(object):
             passenger.time_cost += 1
 
     def FIFO(self):
+        # Does this function loop over the calls? Looks like it doesnt
+        # we need it to look at all of the calls, right?
+        # should i do this in the simulation? how many times would I loop?
+        # would i loop for the elevator calls? or destinations?
         """ Naive strategy: FIFO """
         first_call = self.calls[0]
         passenger = first_call[3]
         #move the Elevator towards next passenger in queue
         empty_elevator_dist = abs(self.floor - passenger.start_floor)
-        self.move_FIFO(passenger.destination) #take the passenger to its destinations
-        distance = abs(passenger.start_floor - passenger.destination) #sitance passenger traveled
+        self.move_FIFO(passenger.destination) #take the passeng er to its destinations
+        # dont we have to delete the passenger just moved here?
+        # like we are doing in the other strategy?
+        # I guess in the sim we could just iterate over the calls but deletion is more clear and honest.
+        distance = abs(passenger.start_floor - passenger.destination) #distance passenger traveled
         #update everyone's wait time_cost
         for call in self.calls:
             passenger.time_cost += distance + empty_elevator_dist
