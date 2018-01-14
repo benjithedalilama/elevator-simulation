@@ -69,7 +69,6 @@ class Elevator(object):
         while len(self.calls) > 0:
             call_floor = self.calls[0][0]
             call_dest = self.calls[0][1]
-            passenger = self.
             move_one(self, call_dest)
 
     def call(self, call_floor, dest, Passenger):
