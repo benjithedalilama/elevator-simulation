@@ -40,7 +40,7 @@ class Elevator(object):
         """ Naive strategy: FIFO """
         first_call = self.calls[0]
         passenger = first_call[3]
-        #move the Elevator twards next passenger in queue
+        #move the Elevator towards next passenger in queue
         empty_elevator_dist = abs(self.floor - passenger.start_floor)
         self.move_FIFO(passenger.destination) #take the passenger to its destinations
         distance = abs(passenger.start_floor - passenger.destination) #sitance passenger traveled
@@ -61,7 +61,6 @@ class Elevator(object):
             down_dest = min(min(down_floors), min(dests))
             while self.floor < down_dest:
                 self.move_one()
-        #self.direction = -1*self.direction
 
     def max_floor_strategy(self):
         while self.calls or self.destinations:
@@ -69,12 +68,8 @@ class Elevator(object):
             self.direction = -1*self.direction #change direction
 
     def call(self, call_floor, dest, Passenger):
-        # append to calls log
         direction = calc_direction(call_floor, dest)
         self.calls.append([call_floor, dest, direction, Passenger])
 
     def add_destination(self, Passenger):
-        """ need to implement destination as part of the Passenger class"""
-        # for test: geenrating random destination:
-        # uniformly_random_destination =  randint(self.floors_min, self.floors_max)
         self.destinations.add(Passenger.destination, Passenger)
