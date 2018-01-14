@@ -10,3 +10,11 @@
  (Passenger 5, Start 2, Destination 4,up),
  (Passenger 6, Start 2, Destination 7,up),
  (Passenger 7, Start 5, Destination 3,down)}
+
+Strategy
+
+If elevator is going up:
+  destination is max(maximum destination of passengers goin up,
+                    maximum starting floor of passengers going down)
+If elevator going down:
+  the reverse

@@ -26,8 +26,19 @@ class Elevator(object):
             if dest[0] == self.floor:
                 self.dropoff(dest[1]) #dest[1] is the Passenger
 
+        for passenger in self.calls:
+            p = passenger[2]
+
         #if direction(self.floor, dest) == self.direction:
         #self.floor += dest - self.curr_floor
+
+    def naive_strat(self):
+        # while there are calls, pickup fi
+        while len(self.calls) > 0:
+            call_floor = self.calls[0][0]
+            call_dest = self.calls[0][1]
+            passenger = self.
+            move_one(self, call_dest)
 
     def call(self, call_floor, dest, Passenger):
         # append to calls log
