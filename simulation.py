@@ -22,9 +22,10 @@ def main():
     if strategy == 1:
         for passenger in passengers:
             elevator.FIFO()
-            elevator.snapshot()
     else:
         elevator.max_floor_strategy()
-        elevator.snapshot()
+    print "\n"
+    for passenger in passengers:
+        print passenger.time_cost
 
 main()

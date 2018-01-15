@@ -12,16 +12,17 @@ class Elevator(object):
         self.max_people = max_people
 
     def move_FIFO(self, target):
+        self.snapshot()
         self.floor = target
 
     def move_one(self):
+        self.snapshot()
         self.floor += self.direction
 
     def pickup_dropoff(self):
         for call in self.calls:
             passenger = call[3]
-            if call[0] == self.floor and call[2] == self.direction:
-                print("Deleting Call",call[:3])
+            if call[0] == self.floor and call[2] == self.direction and len(self.destinations) < self.max_people:
                 self.add_destination(passenger) # adding dest and passenger
                 self.calls.remove(call)
             passenger.time_cost += 1
@@ -30,11 +31,7 @@ class Elevator(object):
         for dest in self.destinations:
             passenger = dest[1]
             if dest[0] == self.floor:
-                print("Deleting destination", dest[0])
                 self.destinations.remove(dest)
-            else:
-                print("trying to find an edge case...")
-                print(self.destinations, self.calls, self.destinations[0][1],self.direction)
             passenger.time_cost += 1
 
     def FIFO(self):
@@ -59,7 +56,6 @@ class Elevator(object):
             while self.floor < max_up_dest:
                 self.pickup_dropoff()
                 self.move_one()
-                print("floor",self.floor)
         elif self.direction == -1:
             downwards_dropoffs_outside = [i[1] for i in self.calls if i[2] == -1]
             downwards_dropoffs_inside = [i[0] for i in self.destinations if i[0] <= self.floor]
@@ -69,14 +65,10 @@ class Elevator(object):
             while self.floor > min_down_dest:
                 self.pickup_dropoff()
                 self.move_one()
-                print("floor",self.floor)
 
     def max_floor_strategy(self):
         self.pickup_dropoff()
         while self.calls or self.destinations:
-            for call in self.calls:
-                print("Call")
-                print(call[:3])
             self.move_to_max_min()
             self.direction = -self.direction
             self.pickup_dropoff()
@@ -89,4 +81,4 @@ class Elevator(object):
         self.destinations.append([Passenger.destination, Passenger])
 
     def snapshot(self):
-        print("\nElevator Snapshot","\nCurrent Floor: ", self.floor, "\nDirection: ", self.direction, "\nDestinations: ", self.destinations)
+        print "\nElevator Snapshot","\nCurrent Floor: ", self.floor, "\nDirection: ", self.direction, "\nDestinations: ", [i[0] for i in self.destinations]
