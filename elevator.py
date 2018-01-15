@@ -9,7 +9,7 @@ class Elevator(object):
         self.calls = []
         self.floor = 0
         self.n_floors = n_floors
-        self.direction = None
+        self.direction = 1
         self.destinations = set([])
         self.max_people = max_people
 
@@ -37,11 +37,6 @@ class Elevator(object):
             passenger.time_cost += 1
 
     def FIFO(self):
-        # Does this function loop over the calls? Looks like it doesnt
-        # we need it to look at all of the calls, right?
-        # should i do this in the simulation? how many times would I loop?
-        # would i loop for the elevator calls? or destinations?
-        """ Naive strategy: FIFO """
         first_call = self.calls[0]
         passenger = first_call[3]
         #move the Elevator towards next passenger in queue
@@ -53,7 +48,8 @@ class Elevator(object):
         distance = abs(passenger.start_floor - passenger.destination) #distance passenger traveled
         #update everyone's wait time_cost
         for call in self.calls:
-            passenger.time_cost += distance + empty_elevator_dist
+            call[3].time_cost += distance + empty_elevator_dist
+        del self.calls[0]
 
     def move_to_max_min(self):
         if self.direction == 1:
@@ -72,7 +68,7 @@ class Elevator(object):
     def max_floor_strategy(self):
         while self.calls or self.destinations:
             self.move_to_max_min()
-            self.direction = -1*self.direction #change direction
+            self.direction = -self.direction
 
     def call(self, call_floor, dest, Passenger):
         direction = calc_direction(call_floor, dest)
@@ -80,3 +76,6 @@ class Elevator(object):
 
     def add_destination(self, Passenger):
         self.destinations.add(Passenger.destination, Passenger)
+
+    def snapshot(self):
+        print("\nElevator Snapshot","\nCurrent Floor: ", self.floor, "\nDirection: ", self.direction, "\nDestinations: ", self.destinations)

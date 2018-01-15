@@ -16,7 +16,10 @@ def main():
             destination_floor = random.choice(xrange(elevator.n_floors))
         passenger = Passenger(start_floor, destination_floor)
         elevator.call(passenger.start_floor, passenger.destination, passenger)
-    if strategy == 2:
-        
+    if strategy == 1:
+        elevator.FIFO
 
-main()
+
+# main()
+elevator = Elevator(10)
+elevator.snapshot()
