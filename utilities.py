@@ -11,3 +11,16 @@ def calc_direction(current_floor, destination):
         # if destination is same as current floor, stay
         direction = 0
     return direction
+
+def target_floor(lst,direction,n_floors):
+    if len(lst) == 0:
+        if direction == 1:
+            return 0
+        elif direction == -1:
+            return n_floors
+    else:
+        if direction == 1:
+            return max(lst)
+        elif direction == -1:
+            return min(lst)
+

@@ -1,5 +1,5 @@
 from passenger import Passenger
-from utilities import calc_direction
+from utilities import calc_direction, target_floor
 
 class Elevator(object):
 
@@ -18,13 +18,17 @@ class Elevator(object):
 
     def move_one(self):
         self.floor += self.direction
-
-        # check for pickups on this floor
+            
+    def pickup_dropoff(self):
+        print(self.calls)
         for i in range(len(self.calls)):
+            print(i)
             call = self.calls[i]
+            print(call)
             passenger = call[3]
-            if call[0] == self.floor and call[2] == direction:
-                self.add_destination(call[1], passenger) # adding dest and passenger
+            ##print(passenger)
+            if call[0] == self.floor and call[2] == self.direction:
+                self.add_destination(passenger) # adding dest and passenger
                 del self.calls[i]
             passenger.time_cost += 1
 
@@ -55,15 +59,17 @@ class Elevator(object):
         if self.direction == 1:
             up_floors = [i[1] for i in self.calls if i[2] == 1]
             dests = [i[0] for i in self.destinations]
-            up_dest = max(max(up_floors), max(dests))
+            up_dest = max(target_floor(up_floors,self.direction,self.n_floors), target_floor(dests,self.direction,self.n_floors))
             while self.floor < up_dest:
                 self.move_one()
+                self.pickup_dropoff()
         elif self.direction == -1:
             down_floors = [i[1] for i in self.calls if i[2] == -1]
             dests = [i[0] for i in self.destinations]
-            down_dest = min(min(down_floors), min(dests))
+            down_dest = min(target_floor(down_floors,self.direction,self.n_floors), target_floor(dests,self.direction,self.n_floors))
             while self.floor < down_dest:
                 self.move_one()
+                self.pickup_dropoff()
 
     def max_floor_strategy(self):
         while self.calls or self.destinations:
@@ -75,7 +81,8 @@ class Elevator(object):
         self.calls.append([call_floor, dest, direction, Passenger])
 
     def add_destination(self, Passenger):
-        self.destinations.add(Passenger.destination, Passenger)
+        self.destinations.add(Passenger.destination)
 
     def snapshot(self):
         print("\nElevator Snapshot","\nCurrent Floor: ", self.floor, "\nDirection: ", self.direction, "\nDestinations: ", self.destinations)
+        
