@@ -10,7 +10,7 @@ class Elevator(object):
         self.floor = 0
         self.n_floors = n_floors
         self.direction = 1
-        self.destinations = set([])
+        self.destinations = []
         self.max_people = max_people
 
     def move_FIFO(self, target):
@@ -18,26 +18,24 @@ class Elevator(object):
 
     def move_one(self):
         self.floor += self.direction
-            
+
     def pickup_dropoff(self):
-        print(self.calls)
-        for i in range(len(self.calls)):
-            print(i)
-            call = self.calls[i]
-            print(call)
+        for call in self.calls:
             passenger = call[3]
-            ##print(passenger)
             if call[0] == self.floor and call[2] == self.direction:
                 self.add_destination(passenger) # adding dest and passenger
-                del self.calls[i]
+                call_to_delete = self.calls.index(call)
+                del call_to_delete
             passenger.time_cost += 1
 
         # Check for dropoffs (destination) on this floor
-        for i in range(len(self.destinations)):
-            dest = self.destinations[i]
+        for dest in self.destinations:
             passenger = dest[1]
             if dest[0] == self.floor:
-                del self.destinations[i]
+                print("DINDINDIN")
+                dest_to_delete = self.destinations.index(dest)
+                print(dest_to_delete)
+                del dest_to_delete
             passenger.time_cost += 1
 
     def FIFO(self):
@@ -46,9 +44,6 @@ class Elevator(object):
         #move the Elevator towards next passenger in queue
         empty_elevator_dist = abs(self.floor - passenger.start_floor)
         self.move_FIFO(passenger.destination) #take the passeng er to its destinations
-        # dont we have to delete the passenger just moved here?
-        # like we are doing in the other strategy?
-        # I guess in the sim we could just iterate over the calls but deletion is more clear and honest.
         distance = abs(passenger.start_floor - passenger.destination) #distance passenger traveled
         #update everyone's wait time_cost
         for call in self.calls:
@@ -73,16 +68,18 @@ class Elevator(object):
 
     def max_floor_strategy(self):
         while self.calls or self.destinations:
+            for call in self.calls:
+                print(call[0], call[1])
             self.move_to_max_min()
             self.direction = -self.direction
+            break
 
-    def call(self, call_floor, dest, Passenger):
+    def add_call(self, call_floor, dest, Passenger):
         direction = calc_direction(call_floor, dest)
         self.calls.append([call_floor, dest, direction, Passenger])
 
     def add_destination(self, Passenger):
-        self.destinations.add(Passenger.destination)
+        self.destinations.append([Passenger.destination, Passenger])
 
     def snapshot(self):
         print("\nElevator Snapshot","\nCurrent Floor: ", self.floor, "\nDirection: ", self.direction, "\nDestinations: ", self.destinations)
-        
