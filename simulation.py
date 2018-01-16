@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from elevator import Elevator
 from passenger import Passenger
 from building import Building
@@ -25,7 +26,13 @@ def main():
     else:
         elevator.max_floor_strategy()
     print "\n"
+    costs = []
     for passenger in passengers:
-        print passenger.time_cost
+        costs.append(passenger.time_cost)
+
+    print "Average cost: ", np.mean(costs)
+    print "Average squared cost: ", np.mean([i**2 for i in costs])
+    print "Median cost: ", np.median(costs)
+    print "Maximum cost: ", max(costs)
 
 main()
