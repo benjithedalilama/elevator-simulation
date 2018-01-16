@@ -30,9 +30,9 @@ def main():
     for passenger in passengers:
         costs.append(passenger.time_cost)
 
-    print "Average cost: ", np.mean(costs)
-    print "Average squared cost: ", np.mean([i**2 for i in costs])
-    print "Median cost: ", np.median(costs)
-    print "Maximum cost: ", max(costs)
+    print "Average cost: ", np.mean(costs), " floors"
+    print "Average squared cost: ", np.mean([i**2 for i in costs]), " floors"
+    print "Median cost: ", np.median(costs), " floors"
+    print "Maximum cost: ", max(costs), " floors"
 
 main()
