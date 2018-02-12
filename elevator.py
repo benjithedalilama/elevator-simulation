@@ -22,19 +22,24 @@ class Elevator(object):
     def pickup_dropoff(self):
         for call in self.calls: ## loops through all calls
             passenger = call[3] ## passenger that made the call
-            ## picks up passenger if there is a call on their floor 
+            ## picks up passenger if there is a call on their floor
             ## that goes on current direction and if there is space left
             if call[0] == self.floor and call[2] == self.direction and len(self.destinations) < self.max_people:
                 self.add_destination(passenger) ## if picks up passenger, add their destination to list
                 self.calls.remove(call) ## if picks up, remove call from list
             passenger.time_cost += 1 ## increase cost by 1 to all passengers waiting for pickup
 
-        # Check for dropoffs (destination) on this floor
+        # Check which pax we need to drop off (if this floor is their destination)
+        to_remove = [] ## storing a list of values to remove later: to not modify list while looping
         for dest in self.destinations:
             passenger = dest[1] ## passenger with the destination
             if dest[0] == self.floor: ## if there is a dest in the current floor, dropoff
-                self.destinations.remove(dest) ## remove from dests list
+                to_remove.append(dest)  ## Record which passengers to remove
             passenger.time_cost += 1 ## increase cost by 1 to all passengers waiting for dropoff
+
+        # Remove passengers
+        for dest in to_remove:
+            self.destinations.remove(dest) ## remove from dests list
 
     def FIFO(self): ## first in, first out strategy
         first_call = self.calls[0] ## prioritizes call waiting for longest time
@@ -53,7 +58,7 @@ class Elevator(object):
             ## destinations of people going up still outside elevator
             ## most elevators would not have this info in advance
             upwards_dropoffs_outside = [i[1] for i in self.calls if i[2] == 1]
-            ## destinations of people going up inside elevator 
+            ## destinations of people going up inside elevator
             upwards_dropoffs_inside = [i[0] for i in self.destinations if i[0] >= self.floor]
             ## set with all destinations
             upwards_dropoffs = set(upwards_dropoffs_outside + upwards_dropoffs_inside)
