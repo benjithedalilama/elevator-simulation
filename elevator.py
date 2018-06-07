@@ -29,12 +29,17 @@ class Elevator(object):
                 self.calls.remove(call) ## if picks up, remove call from list
             passenger.time_cost += 1 ## increase cost by 1 to all passengers waiting for pickup
 
-        # Check for dropoffs (destination) on this floor
+        # Check which pax we need to drop off (if this floor is their destination)
+        to_remove = [] ## storing a list of values to remove later: to not modify list while looping
         for dest in self.destinations:
             passenger = dest[1] ## passenger with the destination
             if dest[0] == self.floor: ## if there is a dest in the current floor, dropoff
-                self.destinations.remove(dest) ## remove from dests list
+                to_remove.append(dest)  ## Record which passengers to remove
             passenger.time_cost += 1 ## increase cost by 1 to all passengers waiting for dropoff
+
+        # Remove passengers
+        for dest in to_remove:
+            self.destinations.remove(dest) ## remove from dests list
 
     def FIFO(self): ## first in, first out strategy
         first_call = self.calls[0] ## prioritizes call waiting for longest time
