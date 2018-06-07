@@ -12,17 +12,17 @@ class Elevator(object):
         self.max_people = max_people ## maximum number of people allowed inside
 
     def move_FIFO(self, target):
-        self.snapshot() ## prints current floor, direction, and destinations
+        # self.snapshot() ## prints current floor, direction, and destinations
         self.floor = target ## moves elevator to target
 
     def move_one(self):
-        self.snapshot() ## prints current floor, direction, and destinations
+        # self.snapshot() ## prints current floor, direction, and destinations
         self.floor += self.direction ## moves one floor according to direction
 
     def pickup_dropoff(self):
         for call in self.calls: ## loops through all calls
             passenger = call[3] ## passenger that made the call
-            ## picks up passenger if there is a call on their floor 
+            ## picks up passenger if there is a call on their floor
             ## that goes on current direction and if there is space left
             if call[0] == self.floor and call[2] == self.direction and len(self.destinations) < self.max_people:
                 self.add_destination(passenger) ## if picks up passenger, add their destination to list
@@ -53,7 +53,7 @@ class Elevator(object):
             ## destinations of people going up still outside elevator
             ## most elevators would not have this info in advance
             upwards_dropoffs_outside = [i[1] for i in self.calls if i[2] == 1]
-            ## destinations of people going up inside elevator 
+            ## destinations of people going up inside elevator
             upwards_dropoffs_inside = [i[0] for i in self.destinations if i[0] >= self.floor]
             ## set with all destinations
             upwards_dropoffs = set(upwards_dropoffs_outside + upwards_dropoffs_inside)

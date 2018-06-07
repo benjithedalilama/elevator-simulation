@@ -19,7 +19,6 @@ def main():
         passenger = Passenger(start_floor, destination_floor)
         passengers.append(passenger)
         elevator.add_call(passenger.start_floor, passenger.destination, passenger)
-    elevator.snapshot()
     if strategy == 1:
         for passenger in passengers:
             elevator.FIFO()
